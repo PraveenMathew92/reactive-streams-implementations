@@ -1,3 +1,5 @@
+package publisher;
+
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -19,7 +21,7 @@ public class PublisherImpl implements Publisher {
 
     @Override
     public void subscribe(Subscriber subscriber) {
-        Subscription subscription = new SubscriptionImpl(this, subscriber);
+        Subscription subscription = new Subscription.SubscriptionImpl(this, subscriber);
         subscriber.onSubscribe(subscription);
 
     }

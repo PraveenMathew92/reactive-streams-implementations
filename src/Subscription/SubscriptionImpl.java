@@ -1,3 +1,5 @@
+package Subscription;
+
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -9,7 +11,7 @@ public class SubscriptionImpl implements Subscription {
     private final Publisher publisher;
     private final Subscriber subscriber;
 
-    SubscriptionImpl(Publisher publisher, Subscriber subscriber) {
+    public SubscriptionImpl(Publisher publisher, Subscriber subscriber) {
         this.publisher = publisher;
         this.subscriber = subscriber;
     }
