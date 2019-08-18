@@ -6,9 +6,10 @@ import org.reactivestreams.Subscriber;
 import java.util.Iterator;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
-public class NaturalNumbersPublisher implements Publisher<Integer>{
-    private final Supplier<IntStream> naturalNumbersSupplier = () -> IntStream.iterate(1, i -> i + 1).limit(10);
+public class NaturalNumbersPublisher implements Publisher<Integer> {
+    private final Supplier<IntStream> naturalNumbersSupplier = () -> IntStream.iterate(1, i -> i + 1);
 
     @Override
     public void subscribe(Subscriber<? super Integer> subscriber) {
@@ -26,9 +27,8 @@ public class NaturalNumbersPublisher implements Publisher<Integer>{
 
         @Override
         public void request(long elementCount) {
-            while(iterator.hasNext()){
-                subscriber.onNext(iterator.next());
-            }
+            LongStream.range(0, elementCount)
+                    .forEach(x -> subscriber.onNext(iterator.next()));
         }
 
         @Override
