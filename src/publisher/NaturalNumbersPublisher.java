@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 public class NaturalNumbersPublisher implements Publisher<Integer>{
-    private final Supplier<IntStream> naturalNumbersSupplier = () -> IntStream.iterate(1, i -> i + 1);
+    private final Supplier<IntStream> naturalNumbersSupplier = () -> IntStream.iterate(1, i -> i + 1).limit(10);
 
     @Override
     public void subscribe(Subscriber<? super Integer> subscriber) {
