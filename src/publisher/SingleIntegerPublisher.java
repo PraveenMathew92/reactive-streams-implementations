@@ -6,6 +6,7 @@ import org.reactivestreams.Subscription;
 
 public class SingleIntegerPublisher implements Publisher<Integer>{
     private final int value;
+    private boolean isTerminated;
 
     public SingleIntegerPublisher(int value) {
         this.value = value;
@@ -25,13 +26,16 @@ public class SingleIntegerPublisher implements Publisher<Integer>{
 
         @Override
         public void request(long l) {
-            subscriber.onNext(value);
+            if(isTerminated) return;
             subscriber.onComplete();
+            subscriber.onNext(value);
         }
 
         @Override
         public void cancel() {
-
+            System.out.println("Canceled subscription of " + subscriber.getClass().getSimpleName() + " to "
+                    + getClass().getDeclaringClass().getSimpleName());
+            isTerminated = true;
         }
     }
 }
