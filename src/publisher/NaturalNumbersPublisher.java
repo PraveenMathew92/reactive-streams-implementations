@@ -9,7 +9,8 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public class NaturalNumbersPublisher implements Publisher<Integer> {
-    private final Supplier<IntStream> naturalNumbersSupplier = () -> IntStream.iterate(1, i -> i + 1);
+    private final Supplier<IntStream> naturalNumbersSupplier = () -> IntStream.iterate(1, i -> i + 1).limit(10);
+    private boolean isTerminated;
 
     @Override
     public void subscribe(Subscriber<? super Integer> subscriber) {
@@ -27,13 +28,21 @@ public class NaturalNumbersPublisher implements Publisher<Integer> {
 
         @Override
         public void request(long elementCount) {
+            if(isTerminated) return;
             LongStream.range(0, elementCount)
-                    .forEach(x -> subscriber.onNext(iterator.next()));
+                    .forEach(i -> {
+                        if(iterator.hasNext())
+                            subscriber.onNext(iterator.next());
+                        else
+                            subscriber.onComplete();
+                    });
         }
 
         @Override
         public void cancel() {
-
+            System.out.println("Canceled subscription of " + subscriber.getClass().getSimpleName() + " to "
+                    + getClass().getDeclaringClass().getSimpleName());
+            isTerminated = true;
         }
     }
 }
