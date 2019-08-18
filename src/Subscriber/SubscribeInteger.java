@@ -4,9 +4,11 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 public class SubscribeInteger implements Subscriber<Integer>{
+
     @Override
     public void onSubscribe(Subscription subscription) {
         System.out.println("Subscribed");
+        subscription.request(1);
     }
 
     @Override
