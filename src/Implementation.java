@@ -1,4 +1,5 @@
 import Subscriber.SubscribeInteger;
+import processor.Map;
 import publisher.NaturalNumbersPublisher;
 import publisher.SingleIntegerPublisher;
 
@@ -8,6 +9,10 @@ public class Implementation {
         publisher.subscribe(new SubscribeInteger());
 
         NaturalNumbersPublisher naturalNumbersPublisher = new NaturalNumbersPublisher();
-        naturalNumbersPublisher.subscribe(new SubscribeInteger());
+//        naturalNumbersPublisher.subscribe(new SubscribeInteger());
+
+        Map doubleValue = new Map(i -> 2*i);
+        naturalNumbersPublisher.subscribe(doubleValue);
+        doubleValue.subscribe(new SubscribeInteger());
     }
 }
