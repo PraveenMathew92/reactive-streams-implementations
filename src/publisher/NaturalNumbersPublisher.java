@@ -32,7 +32,7 @@ public class NaturalNumbersPublisher implements Publisher<Integer> {
             LongStream.range(0, elementCount)
                     .forEach(i -> {
                         if(iterator.hasNext())
-                            subscriber.onNext(iterator.next());
+                            new Thread(() -> subscriber.onNext(iterator.next())).run();
                         else
                             subscriber.onComplete();
                     });
