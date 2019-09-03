@@ -27,8 +27,9 @@ public class SingleIntegerPublisher implements Publisher<Integer>{
         @Override
         public void request(long l) {
             if(isTerminated) return;
+            new Thread(() -> subscriber.onNext(value));
+            isTerminated = true;
             subscriber.onComplete();
-            subscriber.onNext(value);
         }
 
         @Override
