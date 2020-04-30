@@ -11,11 +11,11 @@ public class SingleIntegerPublisherTest extends PublisherVerification<Integer> {
 
     @Override
     public Publisher<Integer> createPublisher(long l) {
-        return new SingleIntegerPublisher(10);
+        return new NaturalNumbersPublisher();
     }
 
     @Override
     public Publisher<Integer> createFailedPublisher() {
-        return new SingleIntegerPublisher(10);
+        return new SingleIntegerPublisher(0);
     }
 }

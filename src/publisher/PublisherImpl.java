@@ -4,8 +4,8 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+/*
 public class PublisherImpl implements Publisher {
-    /*
             dont start without subscribe() -> onSubscribe() -> initialization logic can be executed by the Subscriber
 
             can invoke onNext of Subscriber.
@@ -17,7 +17,7 @@ public class PublisherImpl implements Publisher {
             onComplete|onError -> Subscriber's Subscription -> cancel()
 
             stop signalling after subscription cancelled
-     */
+
 
     @Override
     public void subscribe(Subscriber subscriber) {
@@ -25,4 +25,7 @@ public class PublisherImpl implements Publisher {
         subscriber.onSubscribe(subscription);
 
     }
+
+
 }
+*/

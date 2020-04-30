@@ -5,6 +5,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.function.Predicate;
 import java.util.stream.LongStream;
@@ -23,12 +24,22 @@ public class Filter implements Processor<Integer, Integer>{
 
     @Override
     public void subscribe(Subscriber subscriber) {
+        if(isNull(subscriber)) {
+            throw new NullPointerException();
+        }
         this.subscriber = subscriber;
         subscriber.onSubscribe(new FilterSubscription());
     }
 
     @Override
     public void onSubscribe(Subscription subscription) {
+        if(Objects.isNull(subscription)) {
+            throw new NullPointerException();
+        }
+        if(Objects.nonNull(this.subscription)) {
+            subscription.cancel();
+            return;
+        }
         this.subscription = subscription;
     }
 
@@ -41,13 +52,11 @@ public class Filter implements Processor<Integer, Integer>{
 
     @Override
     public void onError(Throwable throwable) {
-        subscription.cancel();
         subscriber.onError(throwable);
     }
 
     @Override
     public void onComplete() {
-        subscription.cancel();
         subscriber.onComplete();
     }
 

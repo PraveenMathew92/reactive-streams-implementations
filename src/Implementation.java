@@ -6,14 +6,16 @@ import publisher.SingleIntegerPublisher;
 
 public class Implementation {
     public static void main(String[] args) {
-        SingleIntegerPublisher publisher = new SingleIntegerPublisher(5);
-        publisher.subscribe(new SubscribeInteger());
+//        SingleIntegerPublisher publisher = new SingleIntegerPublisher(5);
+//        publisher.subscribe(new SubscribeInteger());
 
         NaturalNumbersPublisher naturalNumbersPublisher = new NaturalNumbersPublisher();
+        Map doubleValue = new Map(i -> i*2);
 
-        Filter multiplesOfFour = new Filter(i -> i % 4 == 0);
 
-        naturalNumbersPublisher.subscribe(multiplesOfFour);
-        multiplesOfFour.subscribe(new SubscribeInteger());
+        naturalNumbersPublisher.subscribe(doubleValue);
+        doubleValue.subscribe(new SubscribeInteger());
+
+//        naturalNumbersPublisher.subscribe(new SubscribeInteger());
     }
 }
