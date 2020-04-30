@@ -1,19 +1,20 @@
-import Subscriber.SubscribeInteger;
+import Subscriber.FixedIntegerSubscriber;
+import Subscriber.IntegerSubscriber;
 import processor.Map;
 import publisher.NaturalNumbersPublisher;
 
 public class Implementation {
     public static void main(String[] args) {
-//        SingleIntegerPublisher publisher = new SingleIntegerPublisher(5);
-//        publisher.subscribe(new SubscribeInteger());
+        NaturalNumbersPublisher publisher = new NaturalNumbersPublisher();
+        Map tableOfThree = new Map(i -> i*3);
 
-        NaturalNumbersPublisher naturalNumbersPublisher = new NaturalNumbersPublisher();
-        Map doubleValue = new Map(i -> i*2);
+        publisher.subscribe(new FixedIntegerSubscriber(5));
 
+        publisher.subscribe(new IntegerSubscriber());
 
-        naturalNumbersPublisher.subscribe(doubleValue);
-        doubleValue.subscribe(new SubscribeInteger());
+        publisher.subscribe(new FixedIntegerSubscriber(15));
 
-//        naturalNumbersPublisher.subscribe(new SubscribeInteger());
+        publisher.subscribe(tableOfThree);
+        tableOfThree.subscribe(new FixedIntegerSubscriber(10));
     }
 }

@@ -5,10 +5,11 @@ import org.reactivestreams.Subscription;
 
 import java.util.Objects;
 
-public class SubscribeInteger implements Subscriber<Integer>{
+public class IntegerSubscriber implements Subscriber<Integer>{
     private Subscription subscription;
 
-    public SubscribeInteger() {
+    public IntegerSubscriber() {
+        this.subscription = null;
     }
 
     @Override
@@ -21,7 +22,8 @@ public class SubscribeInteger implements Subscriber<Integer>{
             return;
         }
         this.subscription = subscription;
-        System.out.println("Subscribed");
+        System.out.println("Subscribed " + getClass().getSimpleName() + " with a subscription to "
+                + subscription.getClass().getEnclosingClass().getSimpleName());
         subscription.request(1);
     }
 

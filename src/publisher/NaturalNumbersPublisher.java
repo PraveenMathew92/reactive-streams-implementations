@@ -2,6 +2,7 @@ package publisher;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
@@ -10,65 +11,55 @@ import java.util.stream.IntStream;
 import static java.util.Objects.isNull;
 
 public class NaturalNumbersPublisher implements Publisher<Integer> {
-    private Supplier<IntStream> naturalNumbersSupplier;
+    private Supplier<IntStream> supplier;
 
     public NaturalNumbersPublisher() {
-        naturalNumbersSupplier = () -> IntStream
-                .iterate(1, i -> i + 1)
-                .limit(10);
+        supplier = () -> IntStream.iterate(1, i -> i + 1)
+        .limit(10);
     }
 
     @Override
-    public void subscribe(Subscriber<? super Integer> subscriber) {
-        if(isNull(subscriber)) {
+    public void subscribe(Subscriber<? super Integer> s) {
+        if(isNull(s)) {
             throw new NullPointerException();
         }
-        subscriber.onSubscribe(new Subscription(subscriber));
-    }
-
-    class Subscription implements org.reactivestreams.Subscription {
-        private final Subscriber subscriber;
-        private volatile Iterator iterator;
-        private volatile boolean isTerminated;
-
-        Subscription(Subscriber subscriber) {
-            this.subscriber = subscriber;
-            this.isTerminated = false;
-            this.iterator = naturalNumbersSupplier
-                    .get()
+        s.onSubscribe(new Subscription() {
+            private boolean isTerminated = false;
+            private Iterator<Integer> iterator = supplier.get()
                     .iterator();
-        }
 
-        @Override
-        public void request(long elementCount) {
-            if (isTerminated) return;
+            @Override
+            public void request(long n) {
+                if(isTerminated) return;
 
-            if(elementCount <= 0) {
-                subscriber.onError(new IllegalArgumentException());
-                cancel();
-            }
-
-            while (elementCount > 0 && !isTerminated){
-                if (iterator.hasNext()) {
-                    elementCount--;
-                    Integer nextElement = (Integer) iterator.next();
-                    new Thread(() -> {
-                        subscriber.onNext(nextElement);
-                    }).start();
-                }
-                else {
-                    subscriber.onComplete();
+                if(n <= 0) {
+                    s.onError(new IllegalArgumentException());
                     cancel();
                 }
-            }
-        }
 
-        @Override
-        public void cancel() {
-            if(isTerminated) return;
-            System.out.println("Canceled subscription of " + subscriber.getClass().getSimpleName() + " to "
-                    + getClass().getDeclaringClass().getSimpleName());
-            isTerminated = true;
-        }
+                while (n > 0 && !isTerminated){
+                    if(iterator.hasNext()) {
+                        n--;
+                        Integer nextElement = iterator.next();
+                        new Thread(() -> s.onNext(nextElement))
+                        .start();
+                    }
+                    else {
+                        s.onComplete();
+                        cancel();
+                    }
+                }
+
+            }
+
+            @Override
+            public void cancel() {
+                if(isTerminated) return;
+
+                System.out.println("Canceled subscription of " + s.getClass().getSimpleName() + " to "
+                        + this.getClass().getEnclosingClass().getSimpleName());
+                isTerminated = true;
+            }
+        });
     }
 }
