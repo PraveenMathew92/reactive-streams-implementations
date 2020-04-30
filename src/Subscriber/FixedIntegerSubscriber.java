@@ -26,9 +26,6 @@ public class FixedIntegerSubscriber implements Subscriber<Integer> {
         this.subscription = subscription;
         System.out.println("Subscribed " + getClass().getSimpleName() + " with a subscription to "
                 + subscription.getClass().getEnclosingClass().getSimpleName());
-
-        subscription.request(limit);
-        subscription.cancel();
     }
 
     @Override

@@ -19,11 +19,11 @@ public class NaturalNumbersPublisher implements Publisher<Integer> {
     }
 
     @Override
-    public void subscribe(Subscriber<? super Integer> s) {
-        if(isNull(s)) {
+    public void subscribe(Subscriber<? super Integer> subscriber) {
+        if(isNull(subscriber)) {
             throw new NullPointerException();
         }
-        s.onSubscribe(new Subscription() {
+        subscriber.onSubscribe(new Subscription() {
             private boolean isTerminated = false;
             private Iterator<Integer> iterator = supplier.get()
                     .iterator();
@@ -33,30 +33,16 @@ public class NaturalNumbersPublisher implements Publisher<Integer> {
                 if(isTerminated) return;
 
                 if(n <= 0) {
-                    s.onError(new IllegalArgumentException());
+                    subscriber.onError(new IllegalArgumentException());
                     cancel();
                 }
-
-                while (n > 0 && !isTerminated){
-                    if(iterator.hasNext()) {
-                        n--;
-                        Integer nextElement = iterator.next();
-                        new Thread(() -> s.onNext(nextElement))
-                        .start();
-                    }
-                    else {
-                        s.onComplete();
-                        cancel();
-                    }
-                }
-
             }
 
             @Override
             public void cancel() {
                 if(isTerminated) return;
 
-                System.out.println("Canceled subscription of " + s.getClass().getSimpleName() + " to "
+                System.out.println("Canceled subscription of " + subscriber.getClass().getSimpleName() + " to "
                         + this.getClass().getEnclosingClass().getSimpleName());
                 isTerminated = true;
             }

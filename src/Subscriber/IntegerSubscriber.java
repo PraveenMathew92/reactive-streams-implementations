@@ -24,7 +24,6 @@ public class IntegerSubscriber implements Subscriber<Integer>{
         this.subscription = subscription;
         System.out.println("Subscribed " + getClass().getSimpleName() + " with a subscription to "
                 + subscription.getClass().getEnclosingClass().getSimpleName());
-        subscription.request(1);
     }
 
     @Override
@@ -32,9 +31,6 @@ public class IntegerSubscriber implements Subscriber<Integer>{
         if(Objects.isNull(integer)) {
             throw new NullPointerException();
         }
-
-        subscription.request(1);
-
         System.out.println("Received : " + integer);
     }
 
